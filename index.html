@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Google Chart: Memuat Data dari Google Spreadsheet</title>
+</head>
+<body>
+  <div id="chart" style="width: 1000px; height: 700px;"></div>
+
+  <!-- Masukkan kode JavaScript Anda di sini -->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+      var queryString = encodeURIComponent('SELECT *');
+      var query = new google.visualization.Query('https://docs.google.com/spreadsheets/d/1mNks3mLv_iS0j11A5pHGe2hVhkwwD5Tkykh0leZTTSQ/edit#gid=0' + queryString);
+
+      query.send(function(response) {
+        if (response.isError()) {
+          console.log('Terjadi kesalahan saat memuat data: ' + response.getMessage());
+          return;
+        }
+
+        var data = response.getDataTable();
+
+        var options = {
+          title: 'Data Saya',
+          curveType: 'function',
+          legend: { position: 'bottom' },
+          colors: ['#ff7f50', '#008080'],
+          backgroundColor: '#f0f0f0'
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('chart'));
+
+        chart.draw(data, options);
+      });
+    }
+  </script>
+</body>
+</html>
